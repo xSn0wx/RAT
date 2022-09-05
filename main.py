@@ -1,8 +1,36 @@
-from banner import banner
 import sys
+from banner import banner
 
 banner()
 print()
+
+
+def principale():
+    while True:
+        print()
+        print("""
+        Que souhaitez vous faire ?
+        1) Reverse shell
+        2) Keylogger
+        3) Scan Network
+        4) DDOS
+        5) Mining Monero
+        6) Exit
+        """)
+        print()
+        intro = input("Votre choix : ")
+        try:
+            int_intro = int(intro)
+            if int_intro == 6:
+                break
+            choix(int_intro)
+            continue
+        except:
+            print("ERREUR: Votre choix doit etre un chiffre ")
+            continue
+        else:
+            break
+
 
 def choix(int_intro):
     if int_intro == 1:
@@ -27,30 +55,8 @@ def choix(int_intro):
 
 # Installation des dependences Windows/Linux
 
-while True:
-    print()
-    print("""
-    Que souhaitez vous faire ?
-    1) Reverse shell
-    2) Keylogger
-    3) Scan Network
-    4) DDOS
-    5) Mining Monero
-    6) Exit
-    """)
-    print()
-    intro = input("Votre choix : ")
-    try:
-        int_intro = int(intro)
-        if int_intro == 6:
-            break
-        choix(int_intro)
-    except:
-        print("ERREUR: Votre choix doit etre un chiffre ")
-        continue
-    else:
-        break
 
+principale()
 print()
 print("Revenez quand vous voulez :)")
 

